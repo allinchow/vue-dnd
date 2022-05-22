@@ -1,28 +1,112 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+  <div id="app" class="app-wrapper">
+    <task-form @createTask="addTask"></task-form>
+    <hr />
+    <drag-drop
+      ref="dragContainer"
+      :dropzones="dropGroups"
+      :dropzonesTitle="'Доска задач'"
+      :originalData="stories"
+      :originalTitle="'Неотсортированные задачи'"
+      :inPlace="true"
+      :enableSave="false"
+      :enableCancel="false"
+    >
+      <template #dd-card="{ cardData }">
+        <task-card :data="cardData" />
+      </template>
+    </drag-drop>
   </div>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld.vue";
+import DragDrop from "vue-drag-n-drop";
+import TaskCard from "@/components/TaskCard.vue";
+import TaskForm from "@/components/TaskForm.vue";
 
 export default {
-  name: "App",
   components: {
-    HelloWorld,
+    DragDrop,
+    TaskCard,
+    TaskForm,
+  },
+  data() {
+    return {
+      componentKey: 0,
+      stories: [
+        {
+          title: "Strategy 101",
+          description: "Create a draft of business plan",
+          id: 13123,
+        },
+        {
+          title: "Strategy 102",
+          description: "Finalize the plan",
+          id: 2322,
+        },
+        {
+          title: "Tech diagram",
+          description: "Draw the tech data",
+          id: 434234,
+        },
+        {
+          title: "Place Holder",
+          description: "Data Science Team",
+          id: 34534,
+        },
+      ],
+
+      dropGroups: [
+        {
+          name: "К выполнению",
+          children: [],
+        },
+        {
+          name: "В работе",
+          children: [],
+        },
+        {
+          name: "Готово",
+          children: [],
+        },
+      ],
+    };
+  },
+  methods: {
+    addTask(task) {
+      this.stories.push(task);
+    },
   },
 };
 </script>
 
 <style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+$primary: #2e6dbe;
+
+@import url("https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap");
+
+.app-wrapper {
+  padding: 20px;
+}
+body,
+button,
+textarea,
+input {
+  font-family: "PT Sans", sans-serif;
+}
+button {
+  cursor: pointer;
+}
+.cc-btn {
+  padding: 6px 10px 8px;
+  background: $primary;
+  color: #fff;
+  border: 0;
+  border-radius: 3px;
+}
+.vue-drag-n-drop {
+  .dd-drop-container {
+    min-height: 10em;
+  }
 }
 </style>
