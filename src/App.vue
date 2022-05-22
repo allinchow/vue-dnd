@@ -72,9 +72,18 @@ export default {
       ],
     };
   },
+  created() {
+    if (localStorage.getItem("stories")) {
+      this.stories = JSON.parse(localStorage.getItem("stories"));
+    }
+  },
   methods: {
     addTask(task) {
       this.stories.push(task);
+      this.saveTasksList();
+    },
+    saveTasksList() {
+      localStorage.setItem("stories", JSON.stringify(this.stories));
     },
   },
 };
